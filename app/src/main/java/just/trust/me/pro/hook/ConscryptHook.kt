@@ -27,7 +27,11 @@ class ConscryptHook : BaseHook() {
                 String::class.java,
                 object : XC_MethodReplacement() {
                     override fun replaceHookedMethod(param: MethodHookParam): Any? {
-                        return ArrayList<X509Certificate>()
+                        return if ((param.method as? java.lang.reflect.Method)?.returnType == Void.TYPE) {
+                            null
+                        } else {
+                            ArrayList<X509Certificate>()
+                        }
                     }
                 }
             )
@@ -43,7 +47,11 @@ class ConscryptHook : BaseHook() {
                 String::class.java,
                 object : XC_MethodReplacement() {
                     override fun replaceHookedMethod(param: MethodHookParam): Any? {
-                        return ArrayList<X509Certificate>()
+                        return if ((param.method as? java.lang.reflect.Method)?.returnType == Void.TYPE) {
+                            null
+                        } else {
+                            ArrayList<X509Certificate>()
+                        }
                     }
                 }
             )
@@ -59,7 +67,11 @@ class ConscryptHook : BaseHook() {
                 javax.net.ssl.SSLSession::class.java,
                 object : XC_MethodReplacement() {
                     override fun replaceHookedMethod(param: MethodHookParam): Any? {
-                        return ArrayList<X509Certificate>()
+                        return if ((param.method as? java.lang.reflect.Method)?.returnType == Void.TYPE) {
+                            null
+                        } else {
+                            ArrayList<X509Certificate>()
+                        }
                     }
                 }
             )
@@ -77,8 +89,12 @@ class ConscryptHook : BaseHook() {
                 javax.net.ssl.SSLParameters::class.java,
                 Boolean::class.javaPrimitiveType,
                 object : XC_MethodReplacement() {
-                    override fun replaceHookedMethod(param: MethodHookParam): Any {
-                        return ArrayList<X509Certificate>()
+                    override fun replaceHookedMethod(param: MethodHookParam): Any? {
+                        return if ((param.method as? java.lang.reflect.Method)?.returnType == Void.TYPE) {
+                            null
+                        } else {
+                            ArrayList<X509Certificate>()
+                        }
                     }
                 }
             )
@@ -96,8 +112,12 @@ class ConscryptHook : BaseHook() {
                 String::class.java,
                 Boolean::class.javaPrimitiveType,
                 object : XC_MethodReplacement() {
-                    override fun replaceHookedMethod(param: MethodHookParam): Any {
-                        return ArrayList<X509Certificate>()
+                    override fun replaceHookedMethod(param: MethodHookParam): Any? {
+                        return if ((param.method as? java.lang.reflect.Method)?.returnType == Void.TYPE) {
+                            null
+                        } else {
+                            ArrayList<X509Certificate>()
+                        }
                     }
                 }
             )

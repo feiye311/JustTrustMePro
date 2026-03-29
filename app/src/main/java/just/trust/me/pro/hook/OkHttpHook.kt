@@ -29,7 +29,7 @@ class OkHttpHook : BaseHook() {
                 List::class.java,
                 object : XC_MethodHook() {
                     override fun beforeHookedMethod(param: MethodHookParam) {
-                        param.result = Unit
+                        param.result = null
                     }
                 }
             )
