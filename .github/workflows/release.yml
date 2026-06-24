@@ -3,8 +3,8 @@ name: Build and Release
 on:
   workflow_dispatch:
   push:
-    tags:
-      - 'v*'
+    branches:
+      - main
 
 jobs:
   build:
@@ -15,7 +15,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Check version tag
+        id: check_version
+        run: |
+          COMMIT_MSG=$(git log -1 --pretty=%B)
+          if [[ "$COMMIT_MSG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+ ]]; then
+            VERSION=$(echo "$COMMIT_MSG" | grep -oP '^v[0-9]+\.[0-9]+\.[0-9]+')
+            echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+            echo "CREATE_RELEASE=true" >> $GITHUB_OUTPUT
+          else
+            echo "CREATE_RELEASE=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Set up JDK 17
+        if: steps.check_version.outputs.CREATE_RELEASE == 'true'
         uses: actions/setup-java@v3
         with:
           java-version: '17'
@@ -23,38 +36,29 @@ jobs:
           cache: gradle
 
       - name: Grant execute permission for gradlew
+        if: steps.check_version.outputs.CREATE_RELEASE == 'true'
         run: chmod +x ./gradlew
 
       - name: Build Debug APK
+        if: steps.check_version.outputs.CREATE_RELEASE == 'true'
         run: ./gradlew assembleDebug
 
       - name: Build Release APK
+        if: steps.check_version.outputs.CREATE_RELEASE == 'true'
         run: ./gradlew assembleRelease
 
-      - name: Sign Release APK
-        if: env.SIGNING_KEY != ''
-        uses: r0adkll/sign-android-release@v1
-        id: sign_release
-        with:
-          releaseDirectory: app/build/outputs/apk/release
-          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
-          alias: ${{ secrets.ALIAS }}
-          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
-          keyPassword: ${{ secrets.KEY_PASSWORD }}
-        env:
-          BUILD_TOOLS_VERSION: "34.0.0"
-          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
-
-      - name: Get tag name
-        id: get_tag
-        run: echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+      - name: Get commit message
+        if: steps.check_version.outputs.CREATE_RELEASE == 'true'
+        id: commit_msg
+        run: echo "MSG=$(git log -1 --pretty=%B | head -1)" >> $GITHUB_OUTPUT
 
       - name: Create Release
-        id: create_release
+        if: steps.check_version.outputs.CREATE_RELEASE == 'true'
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.ref }}
-          name: Release ${{ steps.get_tag.outputs.TAG }}
+          tag_name: ${{ steps.check_version.outputs.VERSION }}
+          name: Release ${{ steps.check_version.outputs.VERSION }}
+          body: ${{ steps.commit_msg.outputs.MSG }}
           draft: false
           prerelease: false
           files: |
