@@ -32,6 +32,7 @@ jobs:
         run: ./gradlew assembleRelease
 
       - name: Sign Release APK
+        if: ${{ secrets.SIGNING_KEY != '' }}
         uses: r0adkll/sign-android-release@v1
         id: sign_release
         with:
@@ -57,4 +58,4 @@ jobs:
           prerelease: false
           files: |
             app/build/outputs/apk/debug/app-debug.apk
-            ${{ steps.sign_release.outputs.signedReleaseFile }}
+            app/build/outputs/apk/release/app-release-unsigned.apk
