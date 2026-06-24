@@ -14,7 +14,8 @@ class Main : IXposedHookLoadPackage {
         HttpClientHook(),
         NetworkSecurityHook(),
         ThirdPartyHook(),
-        ProxyHook()
+        ProxyHook(),
+        CronetHook()
     )
 
     override fun handleLoadPackage(lpparam: LoadPackageParam) {
