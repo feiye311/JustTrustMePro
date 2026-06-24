@@ -15,7 +15,8 @@ class Main : IXposedHookLoadPackage {
         NetworkSecurityHook(),
         ThirdPartyHook(),
         ProxyHook(),
-        CronetHook()
+        CronetHook(),
+        ReactNativeHook()
     )
 
     override fun handleLoadPackage(lpparam: LoadPackageParam) {
