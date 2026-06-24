@@ -8,11 +8,11 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "just.trust.me.pro"
+        applicationId = "com.feiye.trustme"
         minSdk = 21
         targetSdk = 34
-        versionCode = 10006
-        versionName = "1.0.6"
+        versionCode = 20001
+        versionName = "2.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
