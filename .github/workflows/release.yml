@@ -32,7 +32,7 @@ jobs:
         run: ./gradlew assembleRelease
 
       - name: Sign Release APK
-        if: ${{ secrets.SIGNING_KEY != '' }}
+        if: env.SIGNING_KEY != ''
         uses: r0adkll/sign-android-release@v1
         id: sign_release
         with:
@@ -43,6 +43,7 @@ jobs:
           keyPassword: ${{ secrets.KEY_PASSWORD }}
         env:
           BUILD_TOOLS_VERSION: "34.0.0"
+          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
 
       - name: Get tag name
         id: get_tag
